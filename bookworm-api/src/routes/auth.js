@@ -14,4 +14,17 @@ router.post("/", (req, res) => {
   });
 });
 
+router.post("/confirmation", (req, res) => {
+  User.findOneAndUpdate(
+    { confirmationToken: req.body.token },
+    { confirmationToken: "", confirmed: true },
+    { new: true }
+  ).then(
+    user =>
+      user
+        ? res.json({ user: user.toAuthJSON() })
+        : res.status(400).json({ errors: {} })
+  );
+});
+
 export default router;
